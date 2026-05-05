@@ -1,8 +1,8 @@
 package cpu
 
-// loads font into memory
-func (c *CPU) initializeFont() {
-	fonts := [16][5]uint16{
+// loads font into memory at 0x50 to 0x9f
+func (c *CPU) InitializeFont() {
+	fonts := [16][5]uint8{
 		{0xF0, 0x90, 0x90, 0x90, 0xF0}, // 0
 		{0x20, 0x60, 0x20, 0x20, 0x70}, // 1
 		{0xF0, 0x10, 0xF0, 0x80, 0xF0}, // 2
@@ -21,11 +21,9 @@ func (c *CPU) initializeFont() {
 		{0xF0, 0x80, 0xF0, 0x80, 0x80}, // F
 	}
 
-	// use addresses 0x50 to 0x9f
-	for i := 0; i < 16; i++ {
-		for j := 0; j < 5; j++ {
-			c.memory[0x50+5*i+j] = uint8(fonts[i][j] >> 8)
-			c.memory[0x50+5*i+j+8] = uint8(fonts[i][j])
+	for i := range 16 {
+		for j := range 5 {
+			c.memory[0x50 + 5*i + j] = fonts[i][j]
 		}
 	}
 }

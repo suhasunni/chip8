@@ -19,3 +19,15 @@ func NewCPU() *CPU {
 func (c CPU) String() string {
 	return "cpu made"
 }
+
+func (c *CPU) decrementDelayTimer() {
+	if c.delayTimer > 0 {
+		c.delayTimer--
+	}
+}
+
+func (c *CPU) decrementSoundTimer() {
+	if c.soundTimer > 0 {
+		c.soundTimer--
+	}
+}
