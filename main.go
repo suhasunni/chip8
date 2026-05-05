@@ -2,9 +2,15 @@ package main
 
 import (
 	"fmt"
-	// "github.com/suhasunni/chip8/cpu"
+	"github.com/suhasunni/chip8/cpu"
 )
 
 func main() {
-	fmt.Println("hello world!")
+	core := cpu.NewCPU()
+	fmt.Println(core.String())
 }
+
+/*
+to do:
+	start stack
+*/
