@@ -23,7 +23,7 @@ func (c *CPU) InitializeFont() {
 
 	for i := range 16 {
 		for j := range 5 {
-			c.memory[0x50 + 5*i + j] = fonts[i][j]
+			c.memory[0x50+5*i+j] = fonts[i][j]
 		}
 	}
 }
