@@ -57,7 +57,7 @@ func (c *CPU) skipIfEqual(reg1 uint8, reg2 uint8) {
 	}
 }
 
-// 9xy0 - Skip instruction if Vx == Vy
+// 9xy0 - Skip instruction if Vx != Vy
 func (c *CPU) skipIfNotEqual(reg1 uint8, reg2 uint8) {
 	if c.registers[reg1] != c.registers[reg2] {
 		c.pc += 2
@@ -118,7 +118,7 @@ func (c *CPU) sub(reg1 uint8, reg2 uint8) {
 
 // 8xy6 - Shift Vx right by 1 bit, Set Vf = remainder
 func (c *CPU) shiftRight(reg uint8) {
-	if reg%2 == 0 {
+	if c.registers[reg]%2 == 0 {
 		c.registers[0xf] = 0
 	} else {
 		c.registers[0xf] = 1
@@ -159,4 +159,76 @@ func (c *CPU) setPC(imm uint16) {
 // Cxkk - Set Vx = random byte AND kk
 func (c *CPU) setRand(reg uint8, imm uint8) {
 	c.registers[reg] = uint8(rand.Intn(256)) & imm
+}
+
+// Dxyn - Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision.
+func (c *CPU) display(reg1 uint8, reg2 uint8, n uint8) {
+	// to do: implement
+	return
+}
+
+// Ex9E - Skip instruction if value at Vx is pressed
+func (c *CPU) skipIfPressed(reg uint8) {
+	// to do: implement
+	return
+}
+
+// ExA1- Skip instruction if value at Vx is not pressed
+func (c *CPU) skipIfNotPressed(reg uint8) {
+	// to do: implement
+	return
+}
+
+// Fx07 - Set Vx = delayTimer value
+func (c *CPU) delayValue(reg uint8) {
+	c.registers[reg] = c.delayTimer
+}
+
+// Fx0A - Store value of next key press in Vx
+func (c *CPU) nextKeyPress(reg uint8) {
+	// to do: implement
+	return
+}
+
+// Fx15 - Set delay timer to Vx
+func (c *CPU) setDelay(reg uint8) {
+	c.delayTimer = c.registers[reg]
+}
+
+// Fx18 - Set sound timer to Vx
+func (c *CPU) setSound(reg uint8) {
+	c.soundTimer = c.registers[reg]
+}
+
+// Fx1E - Set IR = IR + Vx
+func (c *CPU) addIR(reg uint8) {
+	c.ir += uint16(c.registers[reg])
+}
+
+// Fx29 - Set IR to sprite location of Vx
+func (c *CPU) getSprite(reg uint8) {
+	c.ir = fontOffset + (uint16(c.registers[reg]))*5
+}
+
+// Fx33 - Store decimal digits of Vx in I, I+1, and I+2
+func (c *CPU) storeIR(reg uint8) {
+	num := c.registers[reg]
+	c.memory[c.ir] = num / 100
+	num %= 100
+	c.memory[c.ir+1] = num / 10
+	c.memory[c.ir+2] = num % 10
+}
+
+// Fx55 - Store registers V0 to Vx in memory, starting at IR
+func (c *CPU) storeRegisters(reg uint8) {
+	for i := range reg + 1 {
+		c.memory[c.ir+uint16(i)] = c.registers[i]
+	}
+}
+
+// Fx65 - Load registers V0 to Vx from memory
+func (c *CPU) loadRegisters(reg uint8) {
+	for i := range reg + 1 {
+		c.registers[i] = c.memory[c.ir+uint16(i)]
+	}
 }
