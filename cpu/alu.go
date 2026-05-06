@@ -1,6 +1,6 @@
 package cpu
 
-// helper to store 2 byte word into byte indexed memory (Big Endian)
+// Store 2 byte word into byte indexed memory (Big Endian)
 func (c *CPU) writeWordToMemory(imm uint16, addr uint8) {
 	c.memory[addr] = uint8(imm >> 8)
 	c.memory[addr+1] = uint8(imm)
