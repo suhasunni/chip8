@@ -12,5 +12,5 @@ func main() {
 
 /*
 to do:
-	start stack
+ - continue alu, on Dxyn
 */
