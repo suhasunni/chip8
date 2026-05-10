@@ -12,6 +12,8 @@ type CPU struct {
 	Buffer     [64][32]bool
 }
 
+const fontOffset uint16 = 0x50
+
 func NewCPU() *CPU {
 	c := CPU{}
 	return &c
