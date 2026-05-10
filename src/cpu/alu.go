@@ -41,7 +41,6 @@ func (c *CPU) skipIfEqualImm(reg uint8, imm uint8) {
 	if c.registers[reg] == imm {
 		c.pc += 2
 	}
-	}
 }
 
 // 4xkk - Skip next instruction if Vx != kk
@@ -93,7 +92,6 @@ func (c *CPU) and(reg1 uint8, reg2 uint8) {
 // 8xy3 - Set Vx = Vx XOR Vy
 func (c *CPU) xor(reg1 uint8, reg2 uint8) {
 	c.registers[reg1] ^= c.registers[reg2]
-}
 }
 
 // 8xy4 - Set Vx = Vx + Vy, set Vf = carry
