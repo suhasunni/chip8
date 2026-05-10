@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/suhasunni/chip8/src/cpu"
 	"image/color"
 )
@@ -12,7 +11,7 @@ type Display struct {
 }
 
 func NewDisplay() *Display {
-	d := &Display{}
+	d := &Display{cpu:cpu.NewCPU()}
 	return d
 }
 
@@ -20,12 +19,12 @@ func (d *Display) Update() error {
 	// check which keys are pressed use ebiten.IsKeyPressed, then pass that input to the cpu
 
 	d.cpu.DecrementTimers()
+	
 	return nil
 }
 
 // create an image by iterating over 64x32 buffer, then draw that image to the screen
 func (d *Display) Draw(screen *ebiten.Image) {
-	ebitenutil.DebugPrint(screen, "Hello, World!")
 
 	for i := range 64 {
 		for j := range 32 {
