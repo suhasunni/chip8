@@ -8,7 +8,7 @@ func (c *CPU) writeWordToMemory(imm uint16, addr uint8) {
 
 // 00E0 - Clear display
 func (c *CPU) clear() {
-
+	// TO: IMPLEMENT
 }
 
 // 00EE - Return from a subroutine
@@ -34,7 +34,7 @@ func (c *CPU) call(imm uint16) {
 func (c *CPU) skipIfEqual(reg uint8, imm uint8) {
 	if c.registers[reg] == imm {
 		c.pc += 2
-	}	
+	}
 }
 
 // 4xkk - Skip next instruction if Vx != kk
@@ -79,7 +79,7 @@ func (c *CPU) and(reg1 uint8, reg2 uint8) {
 // 8xy3 - Set Vx = Vx XOR Vy
 func (c *CPU) xor(reg1 uint8, reg2 uint8) {
 	c.registers[reg1] ^= c.registers[reg2]
-} 
+}
 
 // 8xy4 - Set Vx = Vx + Vy, set Vf = carry
 func (c *CPU) add(reg1 uint8, reg2 uint8) {

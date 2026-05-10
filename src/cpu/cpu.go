@@ -9,6 +9,7 @@ type CPU struct {
 	delayTimer uint8
 	soundTimer uint8
 	font       [16][5]uint16
+	Buffer     [64][32]bool
 }
 
 func NewCPU() *CPU {
@@ -20,13 +21,10 @@ func (c CPU) String() string {
 	return "cpu made"
 }
 
-func (c *CPU) decrementDelayTimer() {
+func (c *CPU) DecrementTimers() {
 	if c.delayTimer > 0 {
 		c.delayTimer--
 	}
-}
-
-func (c *CPU) decrementSoundTimer() {
 	if c.soundTimer > 0 {
 		c.soundTimer--
 	}
