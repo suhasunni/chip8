@@ -14,7 +14,7 @@ func (c *CPU) writeWordToMemory(imm uint16, addr uint8) {
 
 // 00E0 - Clear display
 func (c *CPU) clear() {
-
+	// TO: IMPLEMENT
 }
 
 // 00EE - Return from a subroutine
