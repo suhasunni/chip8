@@ -17,9 +17,7 @@ func NewDisplay() *Display {
 
 func (d *Display) Update() error {
 	// check which keys are pressed use ebiten.IsKeyPressed, then pass that input to the cpu
-
-	d.cpu.DecrementTimers()
-
+	d.cpu.Tick()
 	return nil
 }
 
