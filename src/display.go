@@ -11,7 +11,7 @@ type Display struct {
 }
 
 func NewDisplay() *Display {
-	d := &Display{cpu:cpu.NewCPU()}
+	d := &Display{cpu: cpu.NewCPU()}
 	return d
 }
 
@@ -19,7 +19,7 @@ func (d *Display) Update() error {
 	// check which keys are pressed use ebiten.IsKeyPressed, then pass that input to the cpu
 
 	d.cpu.DecrementTimers()
-	
+
 	return nil
 }
 

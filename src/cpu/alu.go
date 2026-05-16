@@ -6,7 +6,7 @@ import (
 
 // to do: reorder the functions based on how they are decoded
 
-// Store 2 byte word into byte indexed memory (Big Endian)
+// Store 2 byte word into byte-indexed memory (Big Endian)
 func (c *CPU) writeWordToMemory(imm uint16, addr uint8) {
 	c.memory[addr] = uint8(imm >> 8)
 	c.memory[addr+1] = uint8(imm)
@@ -14,7 +14,11 @@ func (c *CPU) writeWordToMemory(imm uint16, addr uint8) {
 
 // 00E0 - Clear display
 func (c *CPU) clear() {
-	// TO: IMPLEMENT
+	for i := range 64 {
+		for j := range 32 {
+			c.Buffer[i][j] = false
+		}
+	}
 }
 
 // 00EE - Return from a subroutine

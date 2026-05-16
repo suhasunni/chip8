@@ -1,7 +1,7 @@
 package cpu
 
 // loads font into memory at 0x50 to 0x9f
-func (c *CPU) InitializeFont() {
+func (c *CPU) loadFontsIntoMemory() {
 	fonts := [16][5]uint8{
 		{0xF0, 0x90, 0x90, 0x90, 0xF0}, // 0
 		{0x20, 0x60, 0x20, 0x20, 0x70}, // 1
