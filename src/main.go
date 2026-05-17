@@ -19,4 +19,5 @@ to do:
  - add better logging on startup
  - move ROMs into a folder
  - reorganize files
+ - create a readme
 */
