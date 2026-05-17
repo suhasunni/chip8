@@ -15,6 +15,8 @@ func main() {
 
 /*
 to do:
+ - add error handling to loadROM()
+ - add sound beeping
  - make the terminal run command take the file name as an argument
  - add better logging on startup
  - move ROMs into a folder
