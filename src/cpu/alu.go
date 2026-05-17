@@ -5,8 +5,6 @@ import (
 	"math/rand"
 )
 
-// to do: reorder the functions based on how they are decoded
-
 // Store 2 byte word into byte-indexed memory (Big Endian)
 func (c *CPU) writeWordToMemory(imm uint16, addr byte) {
 	c.memory[addr] = byte(imm >> 8)
@@ -46,65 +44,65 @@ func (c *CPU) call(imm uint16) {
 }
 
 // 3xkk - Skip next instruction if Vx == kk
-func (c *CPU) skipIfEqualImm(reg byte, imm byte) {
+func (c *CPU) skipIfEqualImm(reg uint16, imm byte) {
 	if c.registers[reg] == imm {
 		c.pc += 2
 	}
 }
 
 // 4xkk - Skip next instruction if Vx != kk
-func (c *CPU) skipIfNotEqualImm(reg byte, imm byte) {
+func (c *CPU) skipIfNotEqualImm(reg uint16, imm byte) {
 	if c.registers[reg] != imm {
 		c.pc += 2
 	}
 }
 
 // 5xy0 - Skip next instruction if Vx == Vy
-func (c *CPU) skipIfEqual(reg1 byte, reg2 byte) {
+func (c *CPU) skipIfEqual(reg1 uint16, reg2 uint16) {
 	if c.registers[reg1] == c.registers[reg2] {
 		c.pc += 2
 	}
 }
 
 // 9xy0 - Skip instruction if Vx != Vy
-func (c *CPU) skipIfNotEqual(reg1 byte, reg2 byte) {
+func (c *CPU) skipIfNotEqual(reg1 uint16, reg2 uint16) {
 	if c.registers[reg1] != c.registers[reg2] {
 		c.pc += 2
 	}
 }
 
 // 6xkk - Set Vx = kk
-func (c *CPU) setRegister(reg byte, imm byte) {
+func (c *CPU) setRegister(reg uint16, imm byte) {
 	c.registers[reg] = imm
 }
 
 // 7xkk - Set Vx == Vx + imm
-func (c *CPU) addImm(reg byte, imm byte) {
+func (c *CPU) addImm(reg uint16, imm byte) {
 	c.registers[reg] += imm
 }
 
 // 8xy0 - Set Vx = Vy
-func (c *CPU) assign(reg1 byte, reg2 byte) {
+func (c *CPU) assign(reg1 uint16, reg2 uint16) {
 	c.registers[reg1] = c.registers[reg2]
 }
 
 // 8xy1 - Set Vx = Vx OR Vy
-func (c *CPU) or(reg1 byte, reg2 byte) {
+func (c *CPU) or(reg1 uint16, reg2 uint16) {
 	c.registers[reg1] |= c.registers[reg2]
 }
 
 // 8xy2 - Set Vx = Vx AND Vy
-func (c *CPU) and(reg1 byte, reg2 byte) {
+func (c *CPU) and(reg1 uint16, reg2 uint16) {
 	c.registers[reg1] &= c.registers[reg2]
 }
 
 // 8xy3 - Set Vx = Vx XOR Vy
-func (c *CPU) xor(reg1 byte, reg2 byte) {
+func (c *CPU) xor(reg1 uint16, reg2 uint16) {
 	c.registers[reg1] ^= c.registers[reg2]
 }
 
 // 8xy4 - Set Vx = Vx + Vy, set Vf = carry
-func (c *CPU) add(reg1 byte, reg2 byte) {
+func (c *CPU) add(reg1 uint16, reg2 uint16) {
 	val1, val2 := uint16(c.registers[reg1]), uint16(c.registers[reg2])
 	result := val1 + val2
 	if result > 255 {
@@ -116,7 +114,7 @@ func (c *CPU) add(reg1 byte, reg2 byte) {
 }
 
 // 8xy5 - Set Vx = Vx - Vy, set Vf = no borrow
-func (c *CPU) sub(reg1 byte, reg2 byte) {
+func (c *CPU) sub(reg1 uint16, reg2 uint16) {
 	if c.registers[reg1] < c.registers[reg2] {
 		c.registers[0xf] = 0
 	} else {
@@ -126,7 +124,7 @@ func (c *CPU) sub(reg1 byte, reg2 byte) {
 }
 
 // 8xy6 - Shift Vx right by 1 bit, Set Vf = remainder
-func (c *CPU) shiftRight(reg byte) {
+func (c *CPU) shiftRight(reg uint16) {
 	if c.registers[reg]%2 == 0 {
 		c.registers[0xf] = 0
 	} else {
@@ -136,7 +134,7 @@ func (c *CPU) shiftRight(reg byte) {
 }
 
 // 8xy7 - Set Vx = Vy - Vx, set Vx = no borrow
-func (c *CPU) subn(reg1 byte, reg2 byte) {
+func (c *CPU) subn(reg1 uint16, reg2 uint16) {
 	if c.registers[reg2] < c.registers[reg1] {
 		c.registers[0xf] = 0
 	} else {
@@ -146,7 +144,7 @@ func (c *CPU) subn(reg1 byte, reg2 byte) {
 }
 
 // 8xyE - Shift Vx left by 1 bit, set Vf = (MSB[reg1] == 1)
-func (c *CPU) shiftLeft(reg byte) {
+func (c *CPU) shiftLeft(reg uint16) {
 	if c.registers[reg]>>7 == 1 {
 		c.registers[0xf] = 1
 	} else {
@@ -166,19 +164,19 @@ func (c *CPU) setPC(imm uint16) {
 }
 
 // Cxkk - Set Vx = random byte AND kk
-func (c *CPU) setRand(reg byte, imm byte) {
+func (c *CPU) setRand(reg uint16, imm byte) {
 	c.registers[reg] = byte(rand.Intn(256)) & imm
 }
 
 // Dxyn - Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision.
-func (c *CPU) display(Vx byte, Vy byte, n byte) {
+func (c *CPU) display(reg1 uint16, reg2 uint16, n byte) {
 	// Vf = 0 if no pixels were erased (draw() hanldles switching it Vf 1 if required)
 	c.registers[15] = 0
 
 	for i := range n {
 		// Read sprite from memory
 		sprite := c.memory[c.ir+uint16(i)]
-		c.draw(sprite, int(c.registers[Vx]), int(c.registers[Vy]+i))
+		c.draw(sprite, int(c.registers[reg1]), int(c.registers[reg2]+i))
 	}
 }
 
@@ -196,50 +194,52 @@ func (c *CPU) draw(sprite byte, x int, y int) {
 }
 
 // Ex9E - Skip instruction if value at Vx is pressed
-func (c *CPU) skipIfPressed(reg byte) {
-	// to do: implement
-	return
+func (c *CPU) skipIfPressed(reg uint16) {
+	if c.keypad[c.registers[reg]] {
+		c.pc += 2
+	}
 }
 
-// ExA1- Skip instruction if value at Vx is not pressed
-func (c *CPU) skipIfNotPressed(reg byte) {
-	// to do: implement
-	return
+// ExA1 - Skip instruction if value at Vx is not pressed
+func (c *CPU) skipIfNotPressed(reg uint16) {
+	if !c.keypad[c.registers[reg]] {
+		c.pc += 2
+	}
 }
 
 // Fx07 - Set Vx = delayTimer value
-func (c *CPU) delayValue(reg byte) {
+func (c *CPU) delayValue(reg uint16) {
 	c.registers[reg] = c.delayTimer
 }
 
 // Fx0A - Store value of next key press in Vx
-func (c *CPU) nextKeyPress(reg byte) {
-	// to do: implement
-	return
+func (c *CPU) nextKeyPress(reg uint16) {
+	c.waitingForKey = true
+	c.waitingForKeyReg = reg
 }
 
 // Fx15 - Set delay timer to Vx
-func (c *CPU) setDelay(reg byte) {
+func (c *CPU) setDelay(reg uint16) {
 	c.delayTimer = c.registers[reg]
 }
 
 // Fx18 - Set sound timer to Vx
-func (c *CPU) setSound(reg byte) {
+func (c *CPU) setSound(reg uint16) {
 	c.soundTimer = c.registers[reg]
 }
 
 // Fx1E - Set IR = IR + Vx
-func (c *CPU) addIR(reg byte) {
+func (c *CPU) addIR(reg uint16) {
 	c.ir += uint16(c.registers[reg])
 }
 
 // Fx29 - Set IR to sprite location of Vx
-func (c *CPU) getSprite(reg byte) {
+func (c *CPU) getSprite(reg uint16) {
 	c.ir = fontOffset + (uint16(c.registers[reg]))*5
 }
 
 // Fx33 - Store decimal digits of Vx in I, I+1, and I+2
-func (c *CPU) storeIR(reg byte) {
+func (c *CPU) storeIR(reg uint16) {
 	num := c.registers[reg]
 	c.memory[c.ir] = num / 100
 	num %= 100
@@ -248,14 +248,14 @@ func (c *CPU) storeIR(reg byte) {
 }
 
 // Fx55 - Store registers V0 to Vx in memory, starting at IR
-func (c *CPU) storeRegisters(reg byte) {
+func (c *CPU) storeRegisters(reg uint16) {
 	for i := range reg + 1 {
 		c.memory[c.ir+uint16(i)] = c.registers[i]
 	}
 }
 
 // Fx65 - Load registers V0 to Vx from memory
-func (c *CPU) loadRegisters(reg byte) {
+func (c *CPU) loadRegisters(reg uint16) {
 	for i := range reg + 1 {
 		c.registers[i] = c.memory[c.ir+uint16(i)]
 	}

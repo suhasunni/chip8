@@ -7,16 +7,18 @@ import (
 )
 
 type CPU struct {
-	memory     [4096]byte // main memory
-	registers  [16]byte   // registers
-	pc         uint16     // program counter
-	sp         byte       // stack pointer
-	ir         uint16     // index register
-	delayTimer byte
-	soundTimer byte
-	Buffer     [64][32]bool // display
-	stack      [16]uint16   // call stack
-	keypad     [16]bool
+	memory           [4096]byte // main memory
+	registers        [16]byte   // registers
+	pc               uint16     // program counter
+	sp               byte       // stack pointer
+	ir               uint16     // index register
+	delayTimer       byte
+	soundTimer       byte
+	Buffer           [64][32]bool // display
+	stack            [16]uint16   // call stack
+	keypad           [16]bool
+	waitingForKey    bool
+	waitingForKeyReg uint16
 }
 
 const fontOffset uint16 = 0x50
@@ -65,31 +67,15 @@ func (c *CPU) popStack() (uint16, error) {
 }
 
 func (c *CPU) Tick() {
+	if c.waitingForKey {
+		c.processInput()
+		return
+	}
 	// fetch instruction
 	instruction := uint16(c.memory[c.pc])<<8 | uint16(c.memory[c.pc+1])
 	c.pc += 2
 
-	// decode/excecute
-	var mask byte = 0xF
-	var nibble1 byte = byte((instruction & (uint16(mask) << 12)) >> 12)
-	var nibble2 byte = byte((instruction & (uint16(mask) << 8)) >> 8)
-	var nibble3 byte = byte((instruction & (uint16(mask) << 4)) >> 4)
-	var nibble4 byte = byte(instruction & uint16(mask))
-
-	switch nibble1 {
-	case 0:
-		c.clear()
-	case 1:
-		c.jump(combineBytes(nibble2, nibble3, nibble4))
-	case 6:
-		c.setRegister(nibble2, (nibble3<<4)|nibble4)
-	case 0xA:
-		c.setIR(combineBytes(nibble2, nibble3, nibble4))
-	case 7:
-		c.addImm(nibble2, (nibble3<<4)|nibble4)
-	case 0xD:
-		c.display(nibble2, nibble3, nibble4)
-	}
+	c.decodeAndExecute(instruction)
 }
 
 func (c *CPU) loadROM() {
@@ -104,7 +90,12 @@ func (c *CPU) loadROM() {
 	c.pc = 0x200
 }
 
-// helper to make three bytes a uint16
-func combineBytes(b1 byte, b2 byte, b3 byte) uint16 {
-	return (uint16(b1) << 8) | (uint16(b2) << 4) | uint16(b3)
+func (c *CPU) processInput() {
+	for i := range 16 {
+		if c.keypad[i] {
+			c.registers[c.waitingForKeyReg] = byte(i)
+			c.waitingForKey = false
+			break
+		}
+	}
 }

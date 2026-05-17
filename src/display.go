@@ -16,7 +16,7 @@ func NewDisplay() *Display {
 }
 
 func (d *Display) Update() error {
-	// check which keys are pressed use ebiten.IsKeyPressed, then pass that input to the cpu
+	// check which keys are pressed use ebiten.IsKeyPressed, then pass that input to the cpu, if ANY key is pressed, update c.waitingForKey
 	d.cpu.Tick()
 	return nil
 }
