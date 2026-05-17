@@ -16,7 +16,7 @@ type CPU struct {
 	soundTimer       byte
 	Buffer           [64][32]bool // display
 	stack            [16]uint16   // call stack
-	keypad           [16]bool
+	Keypad           [16]bool
 	waitingForKey    bool
 	waitingForKeyReg uint16
 }
@@ -24,8 +24,7 @@ type CPU struct {
 const fontOffset uint16 = 0x50
 
 func NewCPU() *CPU {
-	// to do: fix this text
-	log.Println("Creating CPU...")
+	log.Println("Initializing CPU...")
 	c := CPU{}
 
 	log.Println("Loading Fonts...")
@@ -79,7 +78,7 @@ func (c *CPU) Tick() {
 }
 
 func (c *CPU) loadROM() {
-	data, err := os.ReadFile("test.ch8")
+	data, err := os.ReadFile("testgames/pong.ch8")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -92,7 +91,7 @@ func (c *CPU) loadROM() {
 
 func (c *CPU) processInput() {
 	for i := range 16 {
-		if c.keypad[i] {
+		if c.Keypad[i] {
 			c.registers[c.waitingForKeyReg] = byte(i)
 			c.waitingForKey = false
 			break

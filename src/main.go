@@ -16,4 +16,7 @@ func main() {
 /*
 to do:
  - make the terminal run command take the file name as an argument
+ - add better logging on startup
+ - move ROMs into a folder
+ - reorganize files
 */

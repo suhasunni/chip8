@@ -1,23 +1,56 @@
 package main
 
 import (
+	"image/color"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/suhasunni/chip8/src/cpu"
-	"image/color"
 )
 
 type Display struct {
-	cpu *cpu.CPU
+	cpu    *cpu.CPU
+	keyMap map[ebiten.Key]int
 }
 
 func NewDisplay() *Display {
 	d := &Display{cpu: cpu.NewCPU()}
+	d.keyMap = map[ebiten.Key]int{
+		ebiten.Key1: 0,
+		ebiten.Key2: 1,
+		ebiten.Key3: 2,
+		ebiten.Key4: 3,
+		ebiten.KeyQ: 4,
+		ebiten.KeyW: 5,
+		ebiten.KeyE: 6,
+		ebiten.KeyR: 7,
+		ebiten.KeyA: 8,
+		ebiten.KeyS: 9,
+		ebiten.KeyD: 10,
+		ebiten.KeyF: 11,
+		ebiten.KeyZ: 12,
+		ebiten.KeyX: 13,
+		ebiten.KeyC: 14,
+		ebiten.KeyV: 15,
+	}
 	return d
 }
 
 func (d *Display) Update() error {
-	// check which keys are pressed use ebiten.IsKeyPressed, then pass that input to the cpu, if ANY key is pressed, update c.waitingForKey
+	// check for keyboard input
+	for key, val := range d.keyMap {
+		if ebiten.IsKeyPressed(key) {
+			d.cpu.Keypad[val] = true
+		} else {
+			d.cpu.Keypad[val] = false
+		}
+	}
+
+	d.cpu.DecrementTimers()
 	d.cpu.Tick()
+	d.cpu.Tick()
+	d.cpu.Tick()
+
+
 	return nil
 }
 

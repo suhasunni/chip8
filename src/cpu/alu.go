@@ -195,14 +195,14 @@ func (c *CPU) draw(sprite byte, x int, y int) {
 
 // Ex9E - Skip instruction if value at Vx is pressed
 func (c *CPU) skipIfPressed(reg uint16) {
-	if c.keypad[c.registers[reg]] {
+	if c.Keypad[c.registers[reg]] {
 		c.pc += 2
 	}
 }
 
 // ExA1 - Skip instruction if value at Vx is not pressed
 func (c *CPU) skipIfNotPressed(reg uint16) {
-	if !c.keypad[c.registers[reg]] {
+	if !c.Keypad[c.registers[reg]] {
 		c.pc += 2
 	}
 }
