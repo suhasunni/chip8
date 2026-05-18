@@ -4,7 +4,7 @@ A CHIP-8 interpreter written in Go.
 
 https://github.com/user-attachments/assets/a5d1042e-93c5-4dd6-b40e-9ef52b5cf5bb
 
-  <em>A rock-paper-scissors game by [SystemLogoff](https://systemlogoff.com/)</em>
+  <em>A rock-paper-scissors game by [SystemLogoff](https://systemlogoff.com/) running on the Chip-8 Interpreter</em>
 
 ## Project Description
 
