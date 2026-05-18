@@ -12,8 +12,8 @@ type Display struct {
 	keyMap map[ebiten.Key]int
 }
 
-func NewDisplay() *Display {
-	d := &Display{cpu: cpu.NewCPU()}
+func NewDisplay(path string) *Display {
+	d := &Display{cpu: cpu.NewCPU(path)}
 	d.keyMap = map[ebiten.Key]int{
 		ebiten.Key1: 1,
 		ebiten.Key2: 2,

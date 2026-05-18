@@ -19,13 +19,15 @@ type CPU struct {
 	Keypad           [16]bool
 	waitingForKey    bool
 	waitingForKeyReg uint16
+	pathToROM		string
 }
 
 const fontOffset uint16 = 0x50
 
-func NewCPU() *CPU {
+func NewCPU(path string) *CPU {
 	log.Println("Initializing CPU...")
-	c := CPU{}
+	
+	c := CPU{pathToROM: path}
 
 	log.Println("Loading Fonts...")
 	c.loadFontsIntoMemory()
@@ -78,15 +80,18 @@ func (c *CPU) Tick() {
 }
 
 func (c *CPU) loadROM() {
-	data, err := os.ReadFile("testgames/rps.ch8")
+	data, err := os.ReadFile(c.pathToROM)
 	if err != nil {
 		log.Fatal(err)
 	}
 	// start loading data at 0x200
-	for i := range len(data) {
-		c.memory[0x200+uint16(i)] = data[i]
-	}
 	c.pc = 0x200
+	for i := range len(data) {
+		if int(c.pc) + i >= 4096 {
+			log.Fatal("ROM file too large, ran out of memory")
+		}
+		c.memory[int(c.pc) + i] = data[i]
+	}
 }
 
 func (c *CPU) processInput() {

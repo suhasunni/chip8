@@ -47,7 +47,7 @@ cd chip8
 To run the program, the interpreter expects a CHIP-8 ROM file as a command-line argument.
 
 ```bash
-go run . path/to/rom.ch8
+go run ./src path/to/rom.ch8
 ```
 
 Once launched, the interpreter will load the ROM into memory and begin execution. Games such as Tetris, Pong, and Space Invaders are included in `testgames/`.
