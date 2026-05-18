@@ -78,7 +78,7 @@ func (c *CPU) Tick() {
 }
 
 func (c *CPU) loadROM() {
-	data, err := os.ReadFile("testgames/space-invaders.ch8")
+	data, err := os.ReadFile("testgames/rps.ch8")
 	if err != nil {
 		log.Fatal(err)
 	}

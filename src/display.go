@@ -15,21 +15,21 @@ type Display struct {
 func NewDisplay() *Display {
 	d := &Display{cpu: cpu.NewCPU()}
 	d.keyMap = map[ebiten.Key]int{
-		ebiten.Key1: 0,
-		ebiten.Key2: 1,
-		ebiten.Key3: 2,
-		ebiten.Key4: 3,
+		ebiten.Key1: 1,
+		ebiten.Key2: 2,
+		ebiten.Key3: 3,
+		ebiten.Key4: 12,
 		ebiten.KeyQ: 4,
 		ebiten.KeyW: 5,
 		ebiten.KeyE: 6,
-		ebiten.KeyR: 7,
+		ebiten.KeyR: 13,
 		ebiten.KeyA: 8,
 		ebiten.KeyS: 9,
 		ebiten.KeyD: 10,
-		ebiten.KeyF: 11,
-		ebiten.KeyZ: 12,
-		ebiten.KeyX: 13,
-		ebiten.KeyC: 14,
+		ebiten.KeyF: 14,
+		ebiten.KeyZ: 10,
+		ebiten.KeyX: 0,
+		ebiten.KeyC: 11,
 		ebiten.KeyV: 15,
 	}
 	return d
@@ -51,7 +51,7 @@ func (d *Display) Update() error {
 	d.cpu.Tick()
 	d.cpu.Tick()
 	d.cpu.Tick()
-	
+
 	return nil
 }
 
