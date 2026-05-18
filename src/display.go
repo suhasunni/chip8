@@ -49,8 +49,9 @@ func (d *Display) Update() error {
 	d.cpu.Tick()
 	d.cpu.Tick()
 	d.cpu.Tick()
-
-
+	d.cpu.Tick()
+	d.cpu.Tick()
+	
 	return nil
 }
 
